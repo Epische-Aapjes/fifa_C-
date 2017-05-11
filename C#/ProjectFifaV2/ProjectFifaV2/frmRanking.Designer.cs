@@ -57,7 +57,6 @@
             this.lvRanking.TabIndex = 2;
             this.lvRanking.UseCompatibleStateImageBehavior = false;
             this.lvRanking.View = System.Windows.Forms.View.Details;
-            this.lvRanking.SelectedIndexChanged += new System.EventHandler(this.lvRanking_SelectedIndexChanged);
             // 
             // clmRank
             // 

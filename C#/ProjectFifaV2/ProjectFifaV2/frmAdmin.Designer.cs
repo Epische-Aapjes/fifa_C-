@@ -74,7 +74,7 @@
             this.txtQuery.Name = "txtQuery";
             this.txtQuery.Size = new System.Drawing.Size(515, 84);
             this.txtQuery.TabIndex = 4;
-            // 
+            //
             // btnExecute
             // 
             this.btnExecute.Location = new System.Drawing.Point(576, 168);

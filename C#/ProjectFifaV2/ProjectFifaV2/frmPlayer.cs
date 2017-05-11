@@ -151,10 +151,5 @@ namespace ProjectFifaV2
         {
             userName = un;
         }
-
-        private void lvOverview_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }
