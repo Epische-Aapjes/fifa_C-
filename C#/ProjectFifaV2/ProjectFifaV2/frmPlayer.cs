@@ -98,9 +98,10 @@ namespace ProjectFifaV2
             DialogResult result = MessageBox.Show("Are you sure you want to clear your prediction?", "Clear Predictions", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (result.Equals(DialogResult.OK))
             {
-                // Clear predections
-                // Update DB
+
             }
+            MessageBox.Show("Predictions succesfully cleared");
+            dbh.CloseConnectionToDB();
         }
 
         private bool DisableEditButton()
