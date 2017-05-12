@@ -39,7 +39,7 @@ namespace ProjectFifaV2
                 dbh.OpenConnectionToDB();
                 bool exist = false;
 
-                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM [tblUsers] WHERE Username = @Username", dbh.GetCon()))
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM [tblUsers] WHERE Usernam = @Username", dbh.GetCon()))
                 {
                     cmd.Parameters.AddWithValue("Username", txtUsername.Text);
                     exist = (int)cmd.ExecuteScalar() > 0;

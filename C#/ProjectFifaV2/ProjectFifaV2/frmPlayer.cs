@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace ProjectFifaV2
 {
@@ -44,7 +45,53 @@ namespace ProjectFifaV2
         }
         private void btnEditPrediction_Click(object sender, EventArgs e)
         {
-            //hier komt de werkende functie van prediction
+            dbh.TestConnection();
+            dbh.OpenConnectionToDB();
+
+            if (!DisableEditButton())
+            {
+                    int userID = 0;
+                    int gameID = 0;
+                    int homeScore = 0;
+                    int awayScore = 0;
+                    int matches = 0;
+
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM [tblUsers] WHERE Username = @userName", dbh.GetCon()))
+                {
+                    cmd.Parameters.AddWithValue("Username", userName);
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    dr.Read();
+                    userID = dr.GetInt32(0);
+                    dr.Close();
+                }
+
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM [tblGames]", dbh.GetCon()))
+                {
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    dr.Read();
+                    userID = dr.GetInt32(0);
+                    dr.Close();
+                }
+                
+                for (int i = 0; i < matches*2; i += 2)
+                {
+                    int.TryParse(txtBoxList[i].Tag.ToString(), out gameID);
+                    int.TryParse(txtBoxList[i].Text, out homeScore);
+                    int.TryParse(txtBoxList[i + 1].Text, out awayScore);
+
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO [tblPredictions] ([User_id], [Game_id], [PredictionHomeScore], [PredictionAwayScore]) VALUES (@userID, @gameID, @homeScore, @away)"))
+                    {
+                        cmd.Parameters.AddWithValue("UserID", userID);
+                        cmd.Parameters.AddWithValue("GameID", gameID);
+                        cmd.Parameters.AddWithValue("HomeScore", homeScore);
+                        cmd.Parameters.AddWithValue("AwayScore", awayScore);
+                        cmd.Connection = dbh.GetCon();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                MessageBox.Show("Prediction seccesfully added");
+                dbh.CloseConnectionToDB();
+            }
         }
         private void btnClearPrediction_Click(object sender, EventArgs e)
         {
@@ -103,8 +150,8 @@ namespace ProjectFifaV2
             dbh.TestConnection();
             dbh.OpenConnectionToDB();
 
-            DataTable hometable = dbh.FillDT("SELECT tblTeams.TeamName FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.Team_ID");
-            DataTable awayTable = dbh.FillDT("SELECT tblTeams.TeamName FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.Team_ID");
+            DataTable hometable = dbh.FillDT("SELECT tblGames.Game_id, tblTeams.TeamName FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.Team_ID");
+            DataTable awayTable = dbh.FillDT("SELECT tblGames.Game_id, tblTeams.TeamName FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.Team_ID");
 
             dbh.CloseConnectionToDB();
 
@@ -126,10 +173,12 @@ namespace ProjectFifaV2
                 txtHomePred.Text = "0";
                 txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
                 txtHomePred.Width = 40;
+                txtHomePred.Tag = dataRowHome["Game_id"].ToString();
 
                 txtAwayPred.Text = "0";
                 txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
                 txtAwayPred.Width = 40;
+                txtAwayPred.Tag = dataRowAway["Game_id"].ToString();
 
                 lblAwayTeam.Text = dataRowAway["TeamName"].ToString();
                 lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
