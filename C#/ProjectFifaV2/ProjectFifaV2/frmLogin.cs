@@ -113,6 +113,7 @@ namespace ProjectFifaV2
                     cmd.Parameters.AddWithValue("Username", username);
                     admin = (int)cmd.ExecuteScalar() > 0;
                 }
+
                 dbh.CloseConnectionToDB();
 
                 if (admin)
@@ -124,7 +125,7 @@ namespace ProjectFifaV2
                 {
                     frmPlayer = new frmPlayer(frmRanking, username);
                     frmPlayer.Show();
-                    this.Visible = false;
+                    this.Visible = true;
                 }
             }
             else
