@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAdmin));
             this.btnLoadData = new System.Windows.Forms.Button();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnSelectFile = new System.Windows.Forms.Button();
@@ -74,7 +75,7 @@
             this.txtQuery.Name = "txtQuery";
             this.txtQuery.Size = new System.Drawing.Size(515, 84);
             this.txtQuery.TabIndex = 4;
-            //
+            // 
             // btnExecute
             // 
             this.btnExecute.Location = new System.Drawing.Point(576, 168);
@@ -115,6 +116,7 @@
             this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.btnLoadData);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmAdmin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Admin";

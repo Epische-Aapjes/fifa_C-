@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPlayer));
             this.btnEditPrediction = new System.Windows.Forms.Button();
             this.btnClearPrediction = new System.Windows.Forms.Button();
             this.btnLogOut = new System.Windows.Forms.Button();
@@ -43,7 +44,7 @@
             // 
             // btnEditPrediction
             // 
-            this.btnEditPrediction.Location = new System.Drawing.Point(364, 70);
+            this.btnEditPrediction.Location = new System.Drawing.Point(364, 80);
             this.btnEditPrediction.Name = "btnEditPrediction";
             this.btnEditPrediction.Size = new System.Drawing.Size(106, 30);
             this.btnEditPrediction.TabIndex = 1;
@@ -53,7 +54,7 @@
             // 
             // btnClearPrediction
             // 
-            this.btnClearPrediction.Location = new System.Drawing.Point(364, 119);
+            this.btnClearPrediction.Location = new System.Drawing.Point(364, 121);
             this.btnClearPrediction.Name = "btnClearPrediction";
             this.btnClearPrediction.Size = new System.Drawing.Size(106, 30);
             this.btnClearPrediction.TabIndex = 2;
@@ -63,7 +64,7 @@
             // 
             // btnLogOut
             // 
-            this.btnLogOut.Location = new System.Drawing.Point(364, 173);
+            this.btnLogOut.Location = new System.Drawing.Point(364, 162);
             this.btnLogOut.Name = "btnLogOut";
             this.btnLogOut.Size = new System.Drawing.Size(106, 30);
             this.btnLogOut.TabIndex = 3;
@@ -74,6 +75,7 @@
             // lblResultsOverview
             // 
             this.lblResultsOverview.AutoSize = true;
+            this.lblResultsOverview.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.lblResultsOverview.Location = new System.Drawing.Point(582, 20);
             this.lblResultsOverview.Name = "lblResultsOverview";
             this.lblResultsOverview.Size = new System.Drawing.Size(90, 13);
@@ -82,7 +84,7 @@
             // 
             // btnShowRanking
             // 
-            this.btnShowRanking.Location = new System.Drawing.Point(364, 21);
+            this.btnShowRanking.Location = new System.Drawing.Point(364, 36);
             this.btnShowRanking.Name = "btnShowRanking";
             this.btnShowRanking.Size = new System.Drawing.Size(106, 30);
             this.btnShowRanking.TabIndex = 6;
@@ -92,6 +94,7 @@
             // 
             // lvOverview
             // 
+            this.lvOverview.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lvOverview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clmHomeTeam,
             this.clmHomeTeamScore,
@@ -103,6 +106,7 @@
             this.lvOverview.TabIndex = 7;
             this.lvOverview.UseCompatibleStateImageBehavior = false;
             this.lvOverview.View = System.Windows.Forms.View.Details;
+            this.lvOverview.SelectedIndexChanged += new System.EventHandler(this.lvOverview_SelectedIndexChanged);
             // 
             // clmHomeTeam
             // 
@@ -128,6 +132,7 @@
             // 
             // pnlPredCard
             // 
+            this.pnlPredCard.BackColor = System.Drawing.SystemColors.ControlDark;
             this.pnlPredCard.Location = new System.Drawing.Point(12, 36);
             this.pnlPredCard.Name = "pnlPredCard";
             this.pnlPredCard.Size = new System.Drawing.Size(346, 599);
@@ -137,6 +142,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1008, 602);
             this.Controls.Add(this.pnlPredCard);
             this.Controls.Add(this.lvOverview);
@@ -145,9 +151,11 @@
             this.Controls.Add(this.btnLogOut);
             this.Controls.Add(this.btnClearPrediction);
             this.Controls.Add(this.btnEditPrediction);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmPlayer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PlayerName";
+            this.Load += new System.EventHandler(this.frmPlayer_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
