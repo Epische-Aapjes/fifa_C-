@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace ProjectFifaV2
 {
@@ -71,6 +72,21 @@ namespace ProjectFifaV2
             {
                 dbh.OpenConnectionToDB();
 
+                using (var fs = File.OpenRead(txtPath.Text))
+                using (var reader = new StreamReader(fs))
+                {
+                    List<string> listA = new List<string>();
+                    List<string> listB = new List<string>();
+                    while (!reader.EndOfStream)
+                    {
+                        var line = reader.ReadLine();
+                        var values = line.Split(';');
+                        Console.WriteLine(line);
+                        listA.Add(values[0]);
+                        listB.Add(values[0]);
+
+                    }
+                }
                 dbh.CloseConnectionToDB();
             }
             else

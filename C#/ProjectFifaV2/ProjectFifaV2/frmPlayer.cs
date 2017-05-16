@@ -31,6 +31,7 @@ namespace ProjectFifaV2
             }
             ShowResults();
             ShowScoreCard();
+            this.userName = un;
             this.Text = "Welcome " + un;
         }
 
@@ -47,50 +48,53 @@ namespace ProjectFifaV2
         {
             dbh.TestConnection();
             dbh.OpenConnectionToDB();
-
-            if (!DisableEditButton())
+            DialogResult result = MessageBox.Show("Are you sure you want to make these predictions?", "Make Predictions", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (result.Equals(DialogResult.OK))
             {
+                if (!DisableEditButton())
+                {
                     int userID = 0;
                     int gameID = 0;
                     int homeScore = 0;
                     int awayScore = 0;
                     int matches = 0;
 
-                using (SqlCommand cmd = new SqlCommand("SELECT * FROM [tblUsers] WHERE Username = @userName", dbh.GetCon()))
-                {
-                    cmd.Parameters.AddWithValue("Username", userName);
-                    SqlDataReader dr = cmd.ExecuteReader();
-                    dr.Read();
-                    userID = dr.GetInt32(0);
-                    dr.Close();
-                }
-
-                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM [tblGames]", dbh.GetCon()))
-                {
-                    SqlDataReader dr = cmd.ExecuteReader();
-                    dr.Read();
-                    userID = dr.GetInt32(0);
-                    dr.Close();
-                }
-                
-                for (int i = 0; i < matches*2; i += 2)
-                {
-                    int.TryParse(txtBoxList[i].Tag.ToString(), out gameID);
-                    int.TryParse(txtBoxList[i].Text, out homeScore);
-                    int.TryParse(txtBoxList[i + 1].Text, out awayScore);
-
-                    using (SqlCommand cmd = new SqlCommand("INSERT INTO [tblPredictions] ([User_id], [Game_id], [PredictionHomeScore], [PredictionAwayScore]) VALUES (@userID, @gameID, @homeScore, @away)"))
+                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM [tblUsers] WHERE Username = @userName", dbh.GetCon()))
                     {
-                        cmd.Parameters.AddWithValue("UserID", userID);
-                        cmd.Parameters.AddWithValue("GameID", gameID);
-                        cmd.Parameters.AddWithValue("HomeScore", homeScore);
-                        cmd.Parameters.AddWithValue("AwayScore", awayScore);
-                        cmd.Connection = dbh.GetCon();
-                        cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddWithValue("Username", this.userName);
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        dr.Read();
+                        userID = dr.GetInt32(0);
+                        dr.Close();
                     }
+
+                    using (SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM [tblGames]", dbh.GetCon()))
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        dr.Read();
+                        matches = dr.GetInt32(0);
+                        dr.Close();
+                    }
+
+                    for (int i = 0; i < matches*2; i += 2)
+                    {
+                        int.TryParse(txtBoxList[i].Tag.ToString(), out gameID);
+                        int.TryParse(txtBoxList[i].Text, out homeScore);
+                        int.TryParse(txtBoxList[i + 1].Text, out awayScore);
+
+                        using (SqlCommand cmd = new SqlCommand("INSERT INTO [tblPredictions] ([User_id], [Game_id], [PredictedHomeScore], [PredictedAwayScore]) VALUES (@userID, @gameID, @homeScore, @awayScore)"))
+                        {
+                            cmd.Parameters.AddWithValue("UserID", userID);
+                            cmd.Parameters.AddWithValue("GameID", gameID);
+                            cmd.Parameters.AddWithValue("HomeScore", homeScore);
+                            cmd.Parameters.AddWithValue("AwayScore", awayScore);
+                            cmd.Connection = dbh.GetCon();
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                    MessageBox.Show("Prediction succesfully added");
+                    dbh.CloseConnectionToDB();
                 }
-                MessageBox.Show("Prediction seccesfully added");
-                dbh.CloseConnectionToDB();
             }
         }
         private void btnClearPrediction_Click(object sender, EventArgs e)
@@ -155,6 +159,7 @@ namespace ProjectFifaV2
             DataTable awayTable = dbh.FillDT("SELECT tblGames.Game_id, tblTeams.TeamName FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.Team_ID");
 
             dbh.CloseConnectionToDB();
+            txtBoxList = new List<TextBox>();
 
             for (int i = 0; i < hometable.Rows.Count; i++)
             {
@@ -165,6 +170,9 @@ namespace ProjectFifaV2
                 Label lblAwayTeam = new Label();
                 TextBox txtHomePred = new TextBox();
                 TextBox txtAwayPred = new TextBox();
+
+                txtBoxList.Add(txtHomePred);
+                txtBoxList.Add(txtAwayPred);
 
                 lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
                 lblHomeTeam.Text = dataRowHome["TeamName"].ToString();
@@ -189,6 +197,7 @@ namespace ProjectFifaV2
                 pnlPredCard.Controls.Add(txtHomePred);
                 pnlPredCard.Controls.Add(txtAwayPred);
                 pnlPredCard.Controls.Add(lblAwayTeam);
+
                 //ListViewItem lstItem = new ListViewItem(dataRowHome["TeamName"].ToString());
                 //lstItem.SubItems.Add(dataRowHome["HomeTeamScore"].ToString());
                 //lstItem.SubItems.Add(dataRowAway["AwayTeamScore"].ToString());
